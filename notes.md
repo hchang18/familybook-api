@@ -66,13 +66,12 @@ const posts = useSelector((state) => state.posts);
 
 ```
 
-- **Flow**: component -> action -> reducers ->
+- **REDUX Flow**: component -> action -> reducers ->
+  - starts from the form in component
   - action gets dispatched in `App.js`
   - getPosts action from folder `actions`
   - immediately goes to posts in folder `reducers`
-  - handle the logic of FETCH_ALL
-
-  - in `action`
+  - handle the logic of FETCH_ALL called in `action`
 
 ### How to carry the post id
 
@@ -129,3 +128,71 @@ This way, code is much less error-prone and scalable
 
 ## MERN Auth
 ### JWT 
+
+Install libraries for client
+
+```Shell
+npm install jwt-decode react-google-login
+```
+
+Install libraries for server
+
+```Shell
+npm install bcryptjs jsonwebtoken
+```
+
+### React Tips
+
+- if you simply type `rafce` then it creates react arrow function component exports. Download extention ES7 React/Redux/GraphQL/React-Native snippets
+- if you creating same thing again over and over like creating textfield, better to have separate `Input.js` so that you don't clutter `Auth.js`
+- for password, there are two states that does not show password and show password
+  - `useState` to keep track of that show password state
+  - `setShowPassword` toggles to reflect turn ON/OFF
+  - state and method to setState is very `react`
+
+### Google Sign In
+
+- https://console.cloud.google.com/apis/dashboard
+- OAuth consent screen
+- Credentials
+  - attach one created in OAuth
+
+
+### Implementing JWT
+
+- Look where the action happens (e.g. `Navbar.js`)
+  - Define initialState
+  - Implement `handleChange` which changes upon any change in InputField
+  - Implement `handleSubmit` that dispatch either signin or signup actions with two parameters (formData and history)
+- Go to `actions/auth.js`
+  - implement `signup`
+  - implement `signin` (found out that we haven't implemented endpoints in backend for CREATE action)
+- Go to BACKEND (server)
+- update `index.js`
+- go to `routes/users.js` and create routes for `signin` and `signup`
+- go to `controller/user.js` to create logis for each function
+- go to `models/user.js` to create schema for user
+
+- If the token expires, show it in the Navbar that it expired
+
+### Middleware
+
+- When you want something to happen before the logic, use middleware
+  - e.g. when you want to like post:
+    - click the like button
+    - auth middleware (next)
+    - go to like controller
+
+- middleware is located in routes
+  - we need auth middleware before creating posts or update posts
+- Go to controller for logics (e.g. like only once per user)
+  - `controllers` > `post.js` > `likePost`
+- Once this is done, go back to front end
+- Go to api folder to create endpoints
+
+### Debugging on web
+
+- make use of `Console`
+- Check `Application` for what are saved under `localStorage` and if the certain data remains there or disappears after some time
+- Check `Network` for contents of `request` and `response`  
+- You can debug frontend code in Console, and backend code in the shell

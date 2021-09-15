@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 
 const postRoutes = require('./routes/posts.js');
+const userRoutes = require('./routes/users.js');
 
 const app = express();
 dotenv.config()
@@ -15,6 +16,7 @@ app.use(cors());
 
 // cors should be above routes to prevent Network error problem
 app.use('/posts', postRoutes);
+app.use('/user', userRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello to Family Book API');

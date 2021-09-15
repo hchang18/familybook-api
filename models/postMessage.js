@@ -3,12 +3,17 @@ const mongoose = require('mongoose');
 const postSchema = mongoose.Schema({
     title: String,
     message: String,
+    name: String, // name of the person who's logged in
     creator: String,
     tags: [String],
     selectedFile: String,
-    likeCount: {
-        type: Number,
-        default: 0
+    // likeCount: {
+    //     type: Number,
+    //     default: 0
+    // },
+    likes: {
+        type: [String],
+        default: [],
     },
     createdAt: {
         type: Date,

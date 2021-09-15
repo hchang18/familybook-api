@@ -20,7 +20,7 @@ const getPosts = async (req, res) => {
 const createPost = async (req, res) => {
     const post = req.body;
     
-    const newPost = new PostMessage(post);
+    const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString() });
 
     try {
         await newPost.save();
@@ -66,12 +66,29 @@ const deletePost = async (req, res) => {
 const likePost = async (req, res) => {
     const { id } = req.params;
 
+    // make sure that user is authenticated
+    if (!req.userId) return res.json({ message: 'Unauthenticated' });
+
     // check if _id is mongoose id
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with that ${id}`);
 
     // find the post
     const post = await PostMessage.findById(id);
-    const updatedPost = await PostMessage.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
+
+    const index = post.likes.findIndex((id) => id === String(req.userId));
+
+    if (index === -1) {
+        // like the post if your id haven't like it before
+        post.likes.push(req.userId);
+    } else {
+        // remove his like if you had already liked it before
+        post.likes = post.likes.filter((id) => id !== String(req.userId));
+    }
+
+    // const updatedPost = await PostMessage.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
+    // no longer incrementing the likeCounts
+    // instead we have likes (a list of ids that pushed like) => change schema
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
 
     res.json(updatedPost);
 
