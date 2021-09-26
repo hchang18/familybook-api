@@ -9,9 +9,42 @@ const PostMessage = require('../models/postMessage.js');
 // each call back function has try and catch block 
 // await only comes with async
 const getPosts = async (req, res) => {
+
+    const { page } = req.query; // we are passing page number as query from front end
+
     try {
-        const postMessages = await PostMessage.find();
-        res.status(200).json(postMessages);
+
+        const LIMIT = 8;
+        const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
+        const total = await PostMessage.countDocuments({});
+
+        // const posts = await PostMessage.find();
+        const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+        
+        // send all of these data to the front end 
+        res.status(200).json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT) });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+// query -> /posts?page=1 (page variable is 1) 
+// params -> /posts/123 (id is 123)
+
+const getPostsBySearch = async (req, res) => {
+
+    const { searchQuery, tags } = req.query;
+    console.log(searchQuery, tags);
+    
+    try {
+        const title = new RegExp(searchQuery, 'i'); // Test test TEST
+        const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags.split(',') } }] });
+        // find me all the posts that match one of those criteria - title and tags
+        // is one of the tags equal to tags
+        res.json({ data: posts });
+        console.log(posts.length);
+        // make sure that action creator in front end match what res is sending
+
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -96,6 +129,7 @@ const likePost = async (req, res) => {
 
 module.exports = {
     getPosts,
+    getPostsBySearch,
     createPost,
     updatePost,
     deletePost,
