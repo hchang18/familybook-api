@@ -196,3 +196,45 @@ npm install bcryptjs jsonwebtoken
 - Check `Application` for what are saved under `localStorage` and if the certain data remains there or disappears after some time
 - Check `Network` for contents of `request` and `response`  
 - You can debug frontend code in Console, and backend code in the shell
+
+## Complete Redesign
+
+### Search the Contents
+
+- Go to component `Home.js`
+- create function `searchPost` and call dispatch with functions in action `dispatch(fetchPostsBySearch)`
+- go to action folder and create `fetchPostsBySearch`
+- go to api folder and create function that grabs results from backend `fetchPostsBySearch`
+
+
+### Pagenation and Loading states
+
+- pagination cuts down the loading time 
+
+**UNDERSTAND THE FLOW**
+
+- currently page and search query from the query parameters
+- no longer fetch the post from the homepage, but pass the page straight to pagination
+- go over full cycle to implement pagenation
+  - remove useEffect page from `component` > `Posts.js` and pass `page` parameter to pagination
+  - implement `useEffect` and `dispatch` in `Pagination.jsx`
+  - go to `actions` to amend `getPosts` and pass in page parameter
+  - go to `api` to amend URI
+  - go to `server` > `controller`
+    - to process req.query
+    - to define LIMIT, startIndex for each page parameters 
+    - and return object {data, currentPage, numberOfPages}
+  - receives returned object in `actions` > `posts.js`
+  - go to `reducers` and parse action.payload and posts it in json format as "global state"
+  - This posted states are consumed in `components` > `Posts` > `useSelector`
+
+### Implement loading statuses
+
+- in actions folder, dispatch start loading before fetching the post, and end loaing after fetching the post
+- go to reducers and create the logics
+
+
+### Client side routing
+
+
+### Comments
