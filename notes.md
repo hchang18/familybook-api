@@ -209,7 +209,7 @@ npm install bcryptjs jsonwebtoken
 
 ### Pagenation and Loading states
 
-- pagination cuts down the loading time 
+- pagination cuts down the loading time
 
 **UNDERSTAND THE FLOW**
 
