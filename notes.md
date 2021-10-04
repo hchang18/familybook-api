@@ -238,3 +238,11 @@ npm install bcryptjs jsonwebtoken
 
 
 ### Comments
+
+- {} inside the HTML are called dynamic jsx block
+- when you click comment, dispatch something to the redux console
+- comments are immediately updated using setComments and setComment (clear the comment I just wrote)
+- if you want automatically scroll to see the latest comment, useRef! Then, add functionality in handleClick
+
+### Faster Response time for LIKES
+- use the 'useState' hook for quick LIKES on frontend

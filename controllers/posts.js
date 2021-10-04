@@ -141,6 +141,26 @@ const likePost = async (req, res) => {
 
 }
 
+const commentPost = async (req, res) => {
+    
+    const { id } = req.params;
+    const { value } = req.body;
+    
+    // get the post from the database
+    const post = await PostMessage.findById(id);
+    // add comments to that post
+    post.comments.push(value);
+    // update the database so that new post contains the new comment
+    // finally we are storing that updated post in updatedPost variable 
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
+
+    res.json(updatedPost);
+    // wait a second! we have to update the model in the post 
+
+
+}
+
+
 module.exports = {
     getPosts,
     getPost, 
@@ -148,5 +168,6 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
-    likePost, 
+    likePost,
+    commentPost,
 }
